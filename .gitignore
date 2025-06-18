@@ -2,3 +2,4 @@ node_modules/
 dest/
 /src/generated/prisma
 .env
+/src/payment/

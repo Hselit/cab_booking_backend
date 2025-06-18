@@ -3,7 +3,8 @@ import path from "path";
 import logger from "morgan";
 
 import indexRouter from "./routes/index";
-import usersRouter from "./users/routes/userRoutes";
+import usersRouter from "../src/login/users/routes/userRoutes";
+import driverRouter from "./login/driver/routes/driverRoutes";
 
 var app = express();
 
@@ -14,5 +15,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/driver", driverRouter);
 
 export default app;
