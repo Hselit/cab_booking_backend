@@ -5,9 +5,9 @@ import { userTokenRequest } from "../dto/user.dto";
 
 dotenv.config();
 
-export function generateUserToken(username: string, email: string, phone: string) {
+export function generateUserToken(username: string, email: string, phone: string, role: string) {
   const token = jwt.sign(
-    { username: username, phone: phone, email: email },
+    { username: username, phone: phone, email: email, role: role },
     process.env.JWT_SECRET as string
   );
   return token;

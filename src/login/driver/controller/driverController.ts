@@ -1,3 +1,10 @@
+import {
+  acceptRideRequest,
+  driverId,
+  driverRideResponse,
+  getAllDrivers,
+  getSingleDriverResponse,
+} from "./../dto/driver.dto";
 import { Response, Request } from "express";
 import { DriverService } from "../service/driverService";
 import {
@@ -6,12 +13,10 @@ import {
   driverRequest,
   driverResponse,
 } from "../dto/driver.dto";
-import { token } from "morgan";
-import { error } from "console";
 
 export const getDriverData = async (req: Request, res: Response) => {
   try {
-    const driverData = await DriverService.getAllDrivers();
+    const driverData: getAllDrivers = await DriverService.getAllDrivers();
     res.status(200).json({ message: "Data Fetched Successfully", data: driverData });
   } catch (error) {
     console.error(error);
@@ -19,13 +24,17 @@ export const getDriverData = async (req: Request, res: Response) => {
   }
 };
 
-export const createDriver = async (req: Request, res: Response) => {
+export const createDriver = async (req: Request, res: Response): Promise<void> => {
   try {
     const driverData: driverRequest = req.body;
     const createdDriver: driverResponse = await DriverService.addNewDriver(driverData);
     res.status(200).json({ message: "Driver Created Successfully", data: createdDriver });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
+    if (err.message.includes("already exists")) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
     res.status(500).json({ error: "Error Occured" });
   }
 };
@@ -44,6 +53,42 @@ export const driverLogin = async (req: Request, res: Response): Promise<void> =>
       }
     }
     res.status(200).json({ message: "Logged In Success", token: responsedata });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const acceptRide = async (req: Request, res: Response) => {
+  try {
+    const acceptRideData: acceptRideRequest = req.body;
+    const acceptedRideData: driverRideResponse = await DriverService.acceptRide(
+      acceptRideData.ride_id,
+      acceptRideData.driver_id,
+      acceptRideData.status
+    );
+    res.status(200).json({ message: "Ride Accepted Successfully", data: acceptedRideData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getAvailableDriver = async (req: Request, res: Response) => {
+  try {
+    const availDrivers: getAllDrivers = await DriverService.getAvailableDrivers();
+    res.status(200).json({ message: "Fetched Available Driver", data: availDrivers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getDriverbyId = async (req: Request, res: Response) => {
+  try {
+    const driverId: driverId = req.params.id;
+    const driverData: getSingleDriverResponse = await DriverService.getDriverbyId(driverId);
+    res.status(200).json({ message: "Fetched Available Driver", data: driverData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

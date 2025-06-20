@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { userLoginRequest, UserRequest, UserResponse, userTokenRequest } from "../dto/user.dto";
 import { error } from "console";
 import { checkUserPassword, generateUserToken } from "../middleware/userAuthentication";
+import { PrismaClientKnownRequestError } from "../../../generated/prisma/runtime/library";
 
 export class UserService {
   static async getAllUser() {
@@ -25,6 +26,16 @@ export class UserService {
       const createdData = await prisma.user.create({ data: userData });
       return createdData;
     } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
+        const field = error.meta?.target;
+
+        if (field && Array.isArray(field)) {
+          if (field.includes("email")) throw new Error("Email already exists");
+          if (field.includes("phone")) throw new Error("Phone number already exists");
+        }
+
+        throw new Error("User with these details already exists.");
+      }
       throw error;
     }
   }
@@ -62,7 +73,12 @@ export class UserService {
       if (!isValidCredentail) {
         return { error: "Invalid Credentials" };
       }
-      const token = generateUserToken(userData.username, userData.email, userData.phone);
+      const token = generateUserToken(
+        userData.username,
+        userData.email,
+        userData.phone,
+        userData.role
+      );
       return { token };
     } catch (error) {
       throw error;

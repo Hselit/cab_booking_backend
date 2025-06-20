@@ -8,6 +8,7 @@ export type UserResponse = {
   email: string;
   phone: string;
   password: string;
+  role: string;
   rating?: number | null;
   createdAt: Date | null;
   rides?: {
@@ -33,6 +34,7 @@ export type userTokenRequest = {
   username: string;
   email: string;
   phone: string;
+  role: string;
 };
 
 export type userLoginRequest = Pick<UserRequest, "email" | "password">;

@@ -12,13 +12,17 @@ export const getAllUser = async (req: Request, res: Response) => {
   }
 };
 
-export const addNewUser = async (req: Request, res: Response) => {
+export const addNewUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const newUserData: UserRequest = req.body;
     const createdData: UserResponse = await UserService.addNewUser(newUserData);
     res.status(201).json({ message: "User Created Successfully", data: createdData });
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    console.log(err);
+    if (err.message.includes("already exists")) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
     res.status(500).json({ message: "Error Occured" });
   }
 };

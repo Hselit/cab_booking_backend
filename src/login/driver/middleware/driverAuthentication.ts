@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export function generateDriverToken(name: string, email: string, phone: string) {
+export function generateDriverToken(name: string, email: string, phone: string, role: string) {
   const token = jwt.sign(
-    { drivername: name, phone: phone, email: email },
+    { drivername: name, phone: phone, email: email, role: role },
     process.env.JWT_SECRET as string
   );
   return token;

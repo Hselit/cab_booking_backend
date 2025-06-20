@@ -1,5 +1,5 @@
 {
-  "name": "practice",
+  "name": "taxicab",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -8,11 +8,13 @@
     "wcrun": "npx tsx ./src/bin/www.ts"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.1",
     "@prisma/client": "^6.9.0",
     "@types/debug": "^4.1.12",
     "@types/express": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.9",
+    "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -21,7 +23,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.17.0",
     "morgan": "~1.9.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

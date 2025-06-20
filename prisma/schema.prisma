@@ -22,43 +22,51 @@ model User {
   password  String
   rating    Float?    @default(0.0)
   createdAt DateTime? @default(now())
+  role      String    @default("user")
   rides     Ride[]    @relation("UserRides")
 }
 
 model Driver {
-  driver_id   String @id @default(auto()) @map("_id") @db.ObjectId
-  drivername  String
-  email       String @unique
-  phone       String @unique
-  status      String @default("Pending")
-  password    String 
-  address     String
-  rating      Float  @default(0.0)
-  createdAt   DateTime @default(now())
-  car         Car?
-  rides       Ride[] @relation("DriverRides")
+  driver_id  String   @id @default(auto()) @map("_id") @db.ObjectId
+  drivername String
+  email      String   @unique
+  phone      String   @unique
+  status     String   @default("Pending")
+  password   String
+  address    String
+  rating     Float    @default(0.0)
+  createdAt  DateTime @default(now())
+  role       String   @default("driver")
+  car        Car?
+  rides      Ride[]   @relation("DriverRides")
 }
 
-model Car{
-  car_id    String @id @default(auto()) @map("_id") @db.ObjectId
+model Car {
+  car_id    String  @id @default(auto()) @map("_id") @db.ObjectId
   brand     String
   modelName String
   plateNo   String  @unique
   color     String
-  driver_id String  @unique @db.ObjectId
-  driver    Driver  @relation(fields: [driver_id],references: [driver_id])
+  driver_id String? @unique @db.ObjectId
+  driver    Driver? @relation(fields: [driver_id], references: [driver_id])
 }
 
 model Ride {
-  ride_id   String @id @default(auto()) @map("_id") @db.ObjectId
-  driver_id String @db.ObjectId
-  user_id   String @db.ObjectId
-  pickup    String
-  drop      String
-  status    String @default("Requested")
-  fare      Float?
-  createdAt DateTime @default(now())
+  ride_id    String    @id @default(auto()) @map("_id") @db.ObjectId
+  driver_id  String?   @db.ObjectId
+  user_id    String    @db.ObjectId
+  pickUp     String
+  pickUpLat  Float
+  pickUpLng  Float
+  drop       String
+  dropLat    Float
+  dropLng    Float
+  status     String    @default("Requested")
+  fare       Float?    @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  acceptedAt DateTime?
 
-  driver    Driver   @relation("DriverRides", fields: [driver_id],references: [driver_id])
-  user      User     @relation("UserRides",fields: [user_id],references: [user_id])
+  driver Driver? @relation("DriverRides", fields: [driver_id], references: [driver_id])
+  user   User    @relation("UserRides", fields: [user_id], references: [user_id])
 }
