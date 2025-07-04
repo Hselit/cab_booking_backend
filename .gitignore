@@ -3,3 +3,4 @@ dest/
 /src/generated/prisma
 .env
 /src/payment/
+sample/

@@ -7,6 +7,7 @@ import usersRouter from "../src/login/users/routes/userRoutes";
 import driverRouter from "./login/driver/routes/driverRoutes";
 import carRouter from "./vehicle/car/routes/carRoutes";
 import rideRouter from "./ride/routes/rideRoutes";
+import { connectRedis } from "./utils/redis";
 
 var app = express();
 
@@ -20,5 +21,7 @@ app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/driver", driverRouter);
 app.use("/api/v1/car", carRouter);
 app.use("/api/v1/ride", rideRouter);
+
+connectRedis();
 
 export default app;

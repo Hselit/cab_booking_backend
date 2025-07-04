@@ -5,15 +5,24 @@ import { userLoginRequest, UserRequest, UserResponse, userTokenRequest } from ".
 import { error } from "console";
 import { checkUserPassword, generateUserToken } from "../middleware/userAuthentication";
 import { PrismaClientKnownRequestError } from "../../../generated/prisma/runtime/library";
+import { redisClient } from "../../../utils/redis";
 
 export class UserService {
+  static EXPIRY: number = 6000;
+
   static async getAllUser() {
     try {
+      const list = await redisClient.get("userlist");
+
+      if (list !== null) {
+        return JSON.parse(list);
+      }
+
       const userlist = await prisma.user.findMany();
-      console.log(userlist);
+      await redisClient.setEx("userlist", UserService.EXPIRY, JSON.stringify(userlist));
       return userlist;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }
